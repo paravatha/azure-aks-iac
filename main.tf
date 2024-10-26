@@ -31,13 +31,13 @@ resource "azurerm_kubernetes_cluster" "mlops-test-aks" {
   location            = local.resource_group.location
   resource_group_name = local.resource_group.name
   dns_prefix          = "${var.prefix}-k8s"
-  kubernetes_version  = "1.28"
+  kubernetes_version  = "1.30"
 
   default_node_pool {
     name            = "default"
-    node_count      = 1
-    vm_size         = "Standard_D2s_v3"
-    os_disk_size_gb = 25
+    node_count      = var.node_count
+    vm_size         = var.node_size
+    os_disk_size_gb = var.disk_size
   }
 
   role_based_access_control_enabled = true
