@@ -6,6 +6,11 @@ variable "prefix" {
   default     = "mlops-test"
 }
 
+variable kube_version {
+  description = "The version of Kubernetes to use for the AKS cluster"
+  default     = "1.30"
+}
+
 variable "node_count" {
   description = "The number of nodes in the Kubernetes Node Pool"
   default     = 2

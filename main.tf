@@ -1,24 +1,3 @@
-#resource "azurerm_resource_group" "mlops-test-rg" {
-#  name     = "${var.prefix}-aks-resources"
-#  location = var.location
-#  tags     = var.tags
-#}
-#
-#resource "azurerm_virtual_network" "mlops-test-vn" {
-#  location            = azurerm_resource_group.mlops-test-rg.location
-#  resource_group_name = azurerm_resource_group.mlops-test-rg.name
-#  name                = "${var.prefix}-vn"
-#  address_space       = ["10.0.0.0/16"]
-#  tags     = var.tags
-#}
-#
-#resource "azurerm_subnet" "mlops-test-sn" {
-#  resource_group_name  = azurerm_resource_group.mlops-test-rg.name
-#  virtual_network_name = azurerm_virtual_network.mlops-test-vn.name
-#  name                 = "${var.prefix}-sn"
-#  address_prefixes     = ["10.0.0.0/24"]
-#}
-
 locals {
   resource_group = {
     name     = var.resource_group_name
@@ -31,7 +10,7 @@ resource "azurerm_kubernetes_cluster" "mlops-test-aks" {
   location            = local.resource_group.location
   resource_group_name = local.resource_group.name
   dns_prefix          = "${var.prefix}-k8s"
-  kubernetes_version  = "1.30"
+  kubernetes_version  = var.kube_version
 
   default_node_pool {
     name            = "default"
