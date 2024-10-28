@@ -8,7 +8,7 @@ variable "prefix" {
 
 variable kube_version {
   description = "The version of Kubernetes to use for the AKS cluster"
-  default     = "1.30"
+  default     = "1.31"
 }
 
 variable "node_count" {
@@ -26,6 +26,10 @@ variable "disk_size" {
   default     = 30
 }
 
+variable "istio_version" {
+  description = "The version of Istio to use for the AKS cluster"
+  default     = "asm-1-23"
+}
 variable "tenant_id" {
   description = "The Tenant ID for the Azure subscription"
   default     = "ttt"

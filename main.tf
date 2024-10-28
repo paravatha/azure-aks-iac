@@ -1,14 +1,7 @@
-locals {
-  resource_group = {
-    name     = var.resource_group_name
-    location = var.location
-  }
-}
-
 resource "azurerm_kubernetes_cluster" "mlops-test-aks" {
   name                = "${var.prefix}-k8s"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
   dns_prefix          = "${var.prefix}-k8s"
   kubernetes_version  = var.kube_version
 
@@ -20,6 +13,8 @@ resource "azurerm_kubernetes_cluster" "mlops-test-aks" {
   }
 
   role_based_access_control_enabled = true
+  oidc_issuer_enabled       = true
+  workload_identity_enabled = true
 
   identity {
     type = "SystemAssigned"
@@ -30,20 +25,16 @@ resource "azurerm_kubernetes_cluster" "mlops-test-aks" {
     load_balancer_sku = "standard"
   }
 
+  service_mesh_profile {
+    mode                             = "Istio"
+    revisions                        = [var.istio_version]
+    external_ingress_gateway_enabled = true
+    internal_ingress_gateway_enabled = true
+  }
+
+  workload_autoscaler_profile {
+    vertical_pod_autoscaler_enabled = true
+  }
+
   tags = var.tags
 }
-
-#module "aks" {
-#  source = "../.."
-#
-#  prefix                    = "prefix-${random_id.prefix.hex}"
-#  cluster_name              = "test-cluster"
-#  kubernetes_version        = "1.28" # don't specify the patch version!
-#  automatic_channel_upgrade = "patch"
-#  network_plugin            = "azure"
-#  network_policy            = "azure"
-#  os_disk_size_gb           = 30
-#  sku_tier                  = "Standard"
-#  rbac_aad                  = false
-#  vnet_subnet_id            = azurerm_subnet.test.id
-#}
